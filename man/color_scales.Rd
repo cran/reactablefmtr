@@ -4,7 +4,12 @@
 \alias{color_scales}
 \title{Add color scales to rows in a column}
 \usage{
-color_scales(data, colors = c("#ff3030", "#ffffff", "#1e90ff"))
+color_scales(
+  data,
+  colors = c("#ff3030", "#ffffff", "#1e90ff"),
+  bright_values = TRUE,
+  span = FALSE
+)
 }
 \arguments{
 \item{data}{Dataset containing at least one numeric column.}
@@ -13,6 +18,15 @@ color_scales(data, colors = c("#ff3030", "#ffffff", "#1e90ff"))
 Colors should be given in order from low values to high values.
 Default colors provided are red-white-blue: c("#ff3030", "#ffffff", "#1e90ff").
 Can use R's built-in colors or other color packages.}
+
+\item{bright_values}{Optionally display values as white.
+Values with a dark-colored background will be shown in white.
+Default is set to TRUE but can be turned off by setting to FALSE.}
+
+\item{span}{Optionally apply colors to values across multiple columns instead of by each column.
+To apply across all columns set to TRUE.
+If applying to a set of columns, can provide either column names or column positions.
+Default is set to FALSE.}
 }
 \value{
 a function that applies conditional colors
@@ -32,7 +46,6 @@ reactable(data,
 
 ## If only two colors are desired,
 ## you can specify them with colors = 'c(color1, color2)';
-
 reactable(data,
  columns = list(
  Petal.Length = colDef(style = color_scales(data,
@@ -41,5 +54,17 @@ reactable(data,
 ## Apply color_scales() across all numeric columns using reactable::defaultColDef
 reactable(data,
 defaultColDef = colDef(style = color_scales(data)))
+
+## Use span to apply colors to values in relation to the entire dataset
+reactable(data,
+defaultColDef = colDef(style = color_scales(data, span = TRUE)))
+
+## Span can take column names
+reactable(data,
+defaultColDef = colDef(style = color_scales(data, span = c("Sepal.Length", "Sepal.Width"))))
+
+## Or it can also take column positions instead
+reactable(data,
+defaultColDef = colDef(style = color_scales(data, span = 1:2)))
 
 }

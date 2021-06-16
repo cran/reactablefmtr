@@ -2,9 +2,15 @@
 % Please edit documentation in R/embed_img.R
 \name{embed_img}
 \alias{embed_img}
-\title{Embed image from web to rows in a column}
+\title{Embed image from web to cells in a column}
 \usage{
-embed_img(data, height = "24", width = "24", label = NULL)
+embed_img(
+  data,
+  height = 24,
+  width = 24,
+  label = NULL,
+  label_position = "right"
+)
 }
 \arguments{
 \item{data}{Dataset containing URL's to images}
@@ -17,6 +23,10 @@ Default width is 24px.}
 
 \item{label}{Optionally assign a label to the image from another column.
 Default is set to NULL or no label.}
+
+\item{label_position}{Position of label relative to image.
+Options are "right", "left", "below", or "above".
+Default is right.}
 }
 \value{
 a function that renders an image
@@ -49,7 +59,7 @@ columns = list(
 ## but you can adjust the size using height and width:
 reactable(data,
 columns = list(
- img = colDef(cell = embed_img(height = "50", width = "45"))))
+ img = colDef(cell = embed_img(height = 50, width = 45))))
 
 ## Optionally assign a label to the image from another column
 reactable(data,

@@ -1,4 +1,4 @@
-#' Embed image from web to rows in a column
+#' Embed image from web to cells in a column
 #'
 #' The `embed_img()` function adds images obtained from the web to a column within reactable.
 #'     It should be placed within the cell argument in reactable::colDef.
@@ -13,6 +13,10 @@
 #'
 #' @param label Optionally assign a label to the image from another column.
 #'     Default is set to NULL or no label.
+#'
+#' @param label_position Position of label relative to image.
+#'     Options are "right", "left", "below", or "above".
+#'     Default is right.
 #'
 #' @import reactable
 #'
@@ -42,7 +46,7 @@
 #' ## but you can adjust the size using height and width:
 #' reactable(data,
 #' columns = list(
-#'  img = colDef(cell = embed_img(height = "50", width = "45"))))
+#'  img = colDef(cell = embed_img(height = 50, width = 45))))
 #'
 #' ## Optionally assign a label to the image from another column
 #' reactable(data,
@@ -52,7 +56,14 @@
 #' @export
 
 
-embed_img <- function(data, height = "24", width = "24", label = NULL) {
+embed_img <- function(data, height = 24, width = 24, label = NULL, label_position = "right") {
+
+  '%notin%' <- Negate('%in%')
+
+  if (label_position %notin% c("left", "right", "above", "below") == TRUE) {
+
+    stop("label_position must be either 'left', 'right', 'above', 'below'")
+  }
 
   image <- function(value, index, name) {
 
@@ -67,11 +78,37 @@ embed_img <- function(data, height = "24", width = "24", label = NULL) {
 
     image <- htmltools::img(src = value, align = "center", height = height, width = width)
 
-    if (!is.null(label)) {
+    if (!is.null(label) & label_position == "right") {
 
-      col_label <- sprintf("    %s", data[[index, label]])
+      col_label <- sprintf("     %s", data[[index, label]])
 
       htmltools::tagList(image, col_label)
+
+    } else if (!is.null(label) & label_position == "left") {
+
+      col_label <- sprintf("%s     ", data[[index, label]])
+
+      htmltools::tagList(col_label, image)
+
+    } else if (!is.null(label) & label_position == "below") {
+
+      col_label <- sprintf("%s", data[[index, label]])
+
+      htmltools::tagList(
+        htmltools::div(style = list(display = "flex", justifyContent = "center", alignItems = "center"),
+                      image),
+        htmltools::div(style = list(textAlign = "center"),
+                      col_label))
+
+    } else if (!is.null(label) & label_position == "above") {
+
+      col_label <- sprintf("%s", data[[index, label]])
+
+      htmltools::tagList(
+        htmltools::div(style = list(textAlign = "center"),
+                       col_label),
+        htmltools::div(style = list(display = "flex", justifyContent = "center", alignItems = "center"),
+                       image))
 
     } else htmltools::tagList(image)
   }

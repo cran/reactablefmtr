@@ -5,27 +5,20 @@
 \title{Theme fivethirtyeight}
 \usage{
 fivethirtyeight(
-  font_family = "Helvetica",
   font_size = 14,
   font_color = "#222222",
-  header_font_family = "Helvetica",
   header_font_size = 12,
   header_font_color = "#000000",
-  cell_padding = 5
+  cell_padding = 5,
+  centered = FALSE
 )
 }
 \arguments{
-\item{font_family}{Font family for the text within the table.
-Default is Helvetica.}
-
 \item{font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 14.}
 
 \item{font_color}{Color of the font for the text within the table and the group headers.
 Default is #222222.}
-
-\item{header_font_family}{Font family for the header text.
-Default is Helvetica.}
 
 \item{header_font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 12.}
@@ -35,6 +28,9 @@ Default is #000000.}
 
 \item{cell_padding}{Numeric value representing the padding size between cells (in px).
 Default is 5.}
+
+\item{centered}{Logical: vertically center the contents of the table.
+Default is FALSE.}
 }
 \value{
 an object of class theme that is applied to a reactable table.
@@ -49,7 +45,7 @@ data <- iris[10:29, ]
 reactable(data,
           theme = fivethirtyeight())
 
-## Cerulean theme with additional options applied
+## Additional options applied
 reactable(data,
           theme = fivethirtyeight(font_size = 12, font_color = "grey", cell_padding = 3))
 

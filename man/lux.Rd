@@ -5,27 +5,20 @@
 \title{Theme lux}
 \usage{
 lux(
-  font_family = "Tahoma",
   font_size = 14,
   font_color = "#8c8c8c",
-  header_font_family = "Tahoma",
   header_font_size = 15,
   header_font_color = "#7f7f7f",
-  cell_padding = 6
+  cell_padding = 6,
+  centered = FALSE
 )
 }
 \arguments{
-\item{font_family}{Font family for the text within the table.
-Default is Tahoma.}
-
 \item{font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 14.}
 
 \item{font_color}{Color of the font for the text within the table and the group headers.
 Default is #8c8c8c.}
-
-\item{header_font_family}{Font family for the header text.
-Default is Tahoma.}
 
 \item{header_font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 15.}
@@ -35,6 +28,9 @@ Default is #7f7f7f.}
 
 \item{cell_padding}{Numeric value representing the padding size between cells (in px).
 Default is 6.}
+
+\item{centered}{Logical: vertically center the contents of the table.
+Default is FALSE.}
 }
 \value{
 an object of class theme that is applied to a reactable table.
@@ -49,7 +45,7 @@ data <- iris[10:29, ]
 reactable(data,
           theme = lux())
 
-## Cerulean theme with additional options applied
+## Additional options applied
 reactable(data,
           theme = lux(font_size = 12, font_color = "grey", cell_padding = 3))
 

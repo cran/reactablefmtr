@@ -5,27 +5,20 @@
 \title{Theme midnight}
 \usage{
 midnight(
-  font_family = "Tahoma",
   font_size = 15,
   font_color = "#727272",
-  header_font_family = "Tahoma",
   header_font_size = 15,
   header_font_color = "#666666",
-  cell_padding = 6
+  cell_padding = 6,
+  centered = FALSE
 )
 }
 \arguments{
-\item{font_family}{Font family for the text within the table.
-Default is Tahoma.}
-
 \item{font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 15.}
 
 \item{font_color}{Color of the font for the text within the table and the group headers.
 Default is #727272.}
-
-\item{header_font_family}{Font family for the header text.
-Default is Tahoma.}
 
 \item{header_font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 15.}
@@ -35,6 +28,9 @@ Default is #666666.}
 
 \item{cell_padding}{Numeric value representing the padding size between cells (in px).
 Default is 6.}
+
+\item{centered}{Logical: vertically center the contents of the table.
+Default is FALSE.}
 }
 \value{
 an object of class theme that is applied to a reactable table.
@@ -49,7 +45,7 @@ data <- iris[10:29, ]
 reactable(data,
           theme = midnight())
 
-## Cerulean theme with additional options applied
+## Additional options applied
 reactable(data,
           theme = midnight(font_size = 12, font_color = "grey", cell_padding = 3))
 

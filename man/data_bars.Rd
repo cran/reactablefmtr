@@ -6,21 +6,29 @@
 \usage{
 data_bars(
   data,
-  fill_color = "#1e90ff",
+  text_position = "inside-end",
+  fill_color = "#15607A",
   fill_color_ref = NULL,
+  fill_by = NULL,
   fill_opacity = 1,
   fill_gradient = FALSE,
-  background = "transparent",
-  max_value = NULL,
+  background = "#EEEEEE",
+  number_fmt = NULL,
+  bias = 1,
   min_value = NULL,
+  max_value = NULL,
   align_bars = "left",
-  bar_height = 19,
-  text_position = "outside-end",
+  bar_height = NULL,
+  force_outside = NULL,
   text_color = "black",
+  text_color_ref = NULL,
+  text_size = NULL,
   brighten_text = TRUE,
   brighten_text_color = "white",
   bold_text = FALSE,
-  number_fmt = NULL,
+  border_width = NULL,
+  border_style = NULL,
+  border_color = NULL,
   icon = NULL,
   icon_ref = NULL,
   icon_size = 20,
@@ -29,20 +37,37 @@ data_bars(
   img = NULL,
   img_ref = NULL,
   img_height = 20,
-  img_width = 20
+  img_width = 20,
+  box_shadow = FALSE,
+  round_edges = FALSE,
+  tooltip = FALSE,
+  animation = "width 1s ease"
 )
 }
 \arguments{
 \item{data}{Dataset containing at least one numeric column.}
 
+\item{text_position}{Choose where to display the text labels relative to the filled data bars.
+Text labels can be displayed within the filled bars ("inside-end" or "inside-base"),
+outside of the filled bars ("outside-end" or "outside-base"),
+within the center of the filled bars ("center"),
+above the filled bars ("above"),
+or not displayed at all ("none").
+Default is inside-end.}
+
 \item{fill_color}{A single color or a vector of fill_color for the fill of the data bars.
 fill_color should be given in order from low values to high values.
 Can use R's built-in fill_color or other color packages.
-Default is #1e90ff.}
+Default is #15607A.}
 
 \item{fill_color_ref}{Optionally assign fill_color to from another column
 by providing the name of the column containing the fill colors in quotes.
 Only one color can be provided per row, and therefore will not work with fill_gradient.
+Default is NULL.}
+
+\item{fill_by}{Assign data bars to a column based on the values of another column.
+The column in reference must contain numeric data.
+The column in which the colors are being assigned to can be either numerical or character.
 Default is NULL.}
 
 \item{fill_opacity}{A value between 0 and 1 that adjusts the opacity in fill_color.
@@ -54,13 +79,20 @@ the colors in the fill of the bars are converted to a left-to-right gradient.
 Default is FALSE.}
 
 \item{background}{The color for the background of the data bars.
-Default is transparent.}
+Default is #EEEEEE.}
+
+\item{number_fmt}{Optionally format numbers using formats from the scales package.
+Default is NULL.}
+
+\item{bias}{A positive value that determines the spacing between multiple colors.
+A higher value spaces out the colors at the higher end more than a lower number.
+Default is 1.}
+
+\item{min_value}{A value to use as the minimum value for the width of the filled bars.
+Default is NULL.}
 
 \item{max_value}{A value to use as the maximum value for the width of the filled bars.
 The default maximum value is the maximum value in the column.
-Default is NULL.}
-
-\item{min_value}{A value to use as the minimum value for the width of the filled bars.
 Default is NULL.}
 
 \item{align_bars}{Display filled bars from left-to-right or right-to-left.
@@ -68,33 +100,53 @@ Options are "left" or "right".
 Default is left.}
 
 \item{bar_height}{Numeric height of the data bars in px.
-Default is 19.}
+Default is NULL.}
 
-\item{text_position}{Choose where to display the values.
-Values can be displayed within the filled bars ("inside-end" or "inside-base"),
-outside of the filled bars ("outside-end" or "outside-base"),
-within the center of the filled bars ("center"),
-or not displayed at all ("none").
-Default is outside-end.}
+\item{force_outside}{Optionally force a range of values to display their text labels on the outside-end of the filled bars
+when the text_position is set to either "inside-end", "inside-base", or "center".
+Must provide a start and a stop number for the range of values to be forced to outside-end. Ex. c(0, 100).
+Default is NULL.}
 
-\item{text_color}{Assigns text color to values.
+\item{text_color}{The color of the text labels.
 Default is black.}
 
-\item{brighten_text}{Logical: automatically assign color to text based on filled color
-when the text is positioned within the filled bars.
+\item{text_color_ref}{Optionally assign text color from another column
+by providing the name of the column containing the text colors in quotes.
+Only one color can be provided per cell.
+Default is NULL.}
+
+\item{text_size}{Numeric value representing the size of the text labels.
+Default is NULL.}
+
+\item{brighten_text}{Logical: automatically assign color to text labels based on filled color
+when the text labels are positioned within the filled bars.
 Text within dark-colored filled bars will turn white, text within light-colored bars will be black.
 Default is TRUE.}
 
-\item{brighten_text_color}{Assigns text color to values if values are within a dark-colored filled bar.
+\item{brighten_text_color}{Assigns color to text labels if values are within a dark-colored filled bar.
 Default is white.}
 
-\item{bold_text}{Logical: bold text.
+\item{bold_text}{Logical: display the text labels in bold.
 Default is FALSE.}
 
-\item{number_fmt}{Optionally format numbers using formats from the scales package.
+\item{border_width}{The width of the border around the filled data bars
+Options are "thin", "medium", "thick", or a numeric value with the units included such as "2px" or "2mm".
+May be specified using one, two, three, or four values.
+See [CSS border-width](https://developer.mozilla.org/en-US/docs/Web/CSS/border-width) for more options.
 Default is NULL.}
 
-\item{icon}{An icon from the Font Awesome library (via shiny).
+\item{border_style}{The style of the border around the filled data bars
+Options are "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset", "none", or "hidden".
+May be specified using one, two, three, or four values.
+See [CSS border-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-style) for more options.
+Default is NULL.}
+
+\item{border_color}{The color of the border around the filled data bars
+May be specified using one, two, three, or four values.
+See [CSS border-color](https://developer.mozilla.org/en-US/docs/Web/CSS/border-color) for more options.
+Default is NULL.}
+
+\item{icon}{Assign an icon label from the Font Awesome library (via shiny).
 If an icon is provided, it will be positioned so that it does not overlap the text for the data bars.
 Default is NULL.}
 
@@ -115,7 +167,7 @@ by providing the name of the column containing the icon colors in quotes.
 Only one color can be provided per cell.
 Default is NULL.}
 
-\item{img}{An image provided with a valid URL.}
+\item{img}{Optionally assign an image label via a valid URL.}
 
 \item{img_ref}{Optionally assign images from another column
 by providing the name of the column containing the image URLs in quotes.
@@ -127,6 +179,22 @@ Default is 20.}
 
 \item{img_width}{A value for the width of the image in px.
 Default is 20.}
+
+\item{box_shadow}{Logical: add a box shadow to the bars.
+Default is FALSE.}
+
+\item{round_edges}{Logical: round the edges around the data bars.
+Default is FALSE.}
+
+\item{tooltip}{Logical: hover tooltip.
+Default is FALSE.}
+
+\item{animation}{Control the duration and timing function of the animation
+when sorting/updating values shown on a page.
+See [CSS transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+for available timing functions and examples.
+Animation can be turned off by setting to "none".
+Default is "width 1s ease".}
 }
 \value{
 a function that applies data bars
@@ -149,6 +217,8 @@ The `data_bars()` function adds a horizontal bar to each row of a column.
     If values are displayed inside the bars and a dark color palette is used to fill the bars,
     `brighten_text` will display the values in white text so the values are visible by default.
     The color of `brighten_text_color` can be changed to a color other than white if desired.
+    The border around the filled bars can be controlled via three different border options:
+    `border_style`, `border_width`, and `border_color`.
     An icon or image can be added to the data bars with `icon` or `img`.
     Alternatively, icons and images can be assigned from another column with `icon_ref` and `img_ref`, similar to `fill_color_ref`.
     The color of the icons can be assigned through either `icon_color` (a single color) or `icon_color_ref` (from another column).
@@ -160,34 +230,36 @@ The `data_bars()` function adds a horizontal bar to each row of a column.
 \examples{
 data <- MASS::Cars93[20:49, c("Make", "MPG.city", "MPG.highway")]
 
-## By default, data bars are aligned left and text_position are placed on the outside end
+## By default, data bars are aligned left and text_position are placed on the inside end
 reactable(data,
-defaultColDef = colDef(
-cell = data_bars(data)))
+          defaultColDef = colDef(
+            cell = data_bars(data)))
 
 ## Align the bars to the right
 reactable(data,
-defaultColDef = colDef(
-cell = data_bars(data,
-align = "right")))
+          defaultColDef = colDef(
+            cell = data_bars(data,
+                             align_bars = "right")))
 
-## Move the text values inside the filled bars
+## Move the text labels outside of the filled bars
 reactable(data,
-defaultColDef = colDef(
-cell = data_bars(data,
-text_position = "inside-end")))
+          defaultColDef = colDef(
+            cell = data_bars(data,
+                             text_position = "outside-end")))
 
 ## Apply multiple fill_color to the filled bars
 reactable(data,
-defaultColDef = colDef(
-cell = data_bars(data,
-fill_color = c("lightblue","royalblue","navy"))))
+          defaultColDef = colDef(
+            cell = data_bars(data,
+                             fill_color = c("lightblue","royalblue","navy"))))
 
 ## Apply a fill_gradient pattern to the filled bars
 reactable(data,
-defaultColDef = colDef(
-cell = data_bars(data,
-fill_color = c("lightblue","royalblue","navy"),
-fill_gradient = TRUE)))
+          defaultColDef = colDef(
+            cell = data_bars(data,
+                             fill_color = c("lightblue","royalblue","navy"),
+                             fill_gradient = TRUE,
+                             text_position = "outside-end")))
+
 
 }

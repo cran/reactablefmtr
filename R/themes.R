@@ -2,17 +2,11 @@
 #'
 #' Reactable-inspired default theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #333333.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -22,6 +16,9 @@
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -34,32 +31,40 @@
 #' reactable(data,
 #'           theme = default())
 #'
-#' ## Default theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = default(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-default <- function(font_family = "-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif",
-                    font_size = 15,
+default <- function(font_size = 15,
                     font_color = "#333333",
-                    header_font_family = "-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif",
                     header_font_size = 15,
                     header_font_color = "#333333",
-                    cell_padding = 6) {
+                    cell_padding = 6,
+                    centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
-      fontFamily = header_font_family,
       color = header_font_color,
       fontSize = header_font_size
     ),
-    groupHeaderStyle = list(fontFamily = header_font_family,
-                            color = font_color,
+    groupHeaderStyle = list(color = font_color,
                             fontSize = header_font_size)
   )
 }
@@ -69,17 +74,11 @@ default <- function(font_family = "-apple-system,BlinkMacSystemFont,Helvetica,Ar
 #'
 #' Bootstrap-inspired cerulean theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #141415.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -89,6 +88,9 @@ default <- function(font_family = "-apple-system,BlinkMacSystemFont,Helvetica,Ar
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -101,21 +103,32 @@ default <- function(font_family = "-apple-system,BlinkMacSystemFont,Helvetica,Ar
 #' reactable(data,
 #'           theme = cerulean())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = cerulean(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-cerulean <- function(font_family = "Verdana",
-                     font_size = 14,
+cerulean <- function(font_size = 14,
                      font_color = "#141415",
-                     header_font_family = "Verdana",
                      header_font_size = 15,
                      header_font_color = "#cfe9f7",
-                     cell_padding = 6) {
+                     cell_padding = 6,
+                     centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#e9ecef",
@@ -123,8 +136,7 @@ cerulean <- function(font_family = "Verdana",
     stripedColor = "#e9ecef",
     highlightColor = "#e9ecef",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#3ba9e8",
@@ -133,13 +145,11 @@ cerulean <- function(font_family = "Verdana",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontFamily = header_font_family,
       fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -177,17 +187,11 @@ cerulean <- function(font_family = "Verdana",
 #'
 #' Bootstrap-inspired cosmo theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #141415.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -197,6 +201,9 @@ cerulean <- function(font_family = "Verdana",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -209,21 +216,32 @@ cerulean <- function(font_family = "Verdana",
 #' reactable(data,
 #'           theme = cosmo())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = cosmo(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-cosmo <- function(font_family = "Verdana",
-                  font_size = 14,
+cosmo <- function(font_size = 14,
                   font_color = "#141415",
-                  header_font_family = "Verdana",
                   header_font_size = 15,
                   header_font_color = "#ffffff",
-                  cell_padding = 6) {
+                  cell_padding = 6,
+                  centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#f8f9fa",
     borderColor = "#f8f9fa",
@@ -231,8 +249,7 @@ cosmo <- function(font_family = "Verdana",
     stripedColor = "white",
     highlightColor = "white",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#373a3c",
@@ -240,13 +257,11 @@ cosmo <- function(font_family = "Verdana",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -284,17 +299,11 @@ cosmo <- function(font_family = "Verdana",
 #'
 #' Bootstrap-inspired cyborg theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #888888.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -304,6 +313,9 @@ cosmo <- function(font_family = "Verdana",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -316,21 +328,32 @@ cosmo <- function(font_family = "Verdana",
 #' reactable(data,
 #'           theme = cyborg())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = cyborg(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-cyborg <- function(font_family = "Verdana",
-                   font_size = 14,
+cyborg <- function(font_size = 14,
                    font_color = "#888888",
-                   header_font_family = "Verdana",
                    header_font_size = 15,
                    header_font_color = "#7b7b7b",
-                   cell_padding = 6) {
+                   cell_padding = 6,
+                   centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#060606",
     borderColor = "#888888",
@@ -338,8 +361,7 @@ cyborg <- function(font_family = "Verdana",
     stripedColor = "#282828",
     highlightColor = "#282828",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#060606",
@@ -351,8 +373,7 @@ cyborg <- function(font_family = "Verdana",
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -390,17 +411,11 @@ cyborg <- function(font_family = "Verdana",
 #'
 #' Bootstrap-inspired darkly theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Georgia.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #ffffff.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Georgia.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -410,6 +425,9 @@ cyborg <- function(font_family = "Verdana",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -422,21 +440,32 @@ cyborg <- function(font_family = "Verdana",
 #' reactable(data,
 #'           theme = darkly())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = darkly(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-darkly <- function(font_family = "Georgia",
-                   font_size = 14,
+darkly <- function(font_size = 14,
                    font_color = "#ffffff",
-                   header_font_family = "Georgia",
                    header_font_size = 15,
                    header_font_color = "#afbdcc",
-                   cell_padding = 6) {
+                   cell_padding = 6,
+                   centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#222222",
     borderColor = "#222222",
@@ -444,8 +473,7 @@ darkly <- function(font_family = "Georgia",
     stripedColor = "#adb5bd",
     highlightColor = "#adb5bd",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#375a7f",
@@ -453,12 +481,10 @@ darkly <- function(font_family = "Georgia",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontFamily = header_font_family,
                              fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
@@ -498,17 +524,11 @@ darkly <- function(font_family = "Georgia",
 #'
 #' Bootstrap-inspired flatly theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Georgia.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #212529.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Georgia.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -518,6 +538,9 @@ darkly <- function(font_family = "Georgia",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -530,21 +553,32 @@ darkly <- function(font_family = "Georgia",
 #' reactable(data,
 #'           theme = flatly())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = flatly(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-flatly <- function(font_family = "Georgia",
-                   font_size = 14,
+flatly <- function(font_size = 14,
                    font_color = "#212529",
-                   header_font_family = "Georgia",
                    header_font_size = 15,
                    header_font_color = "#ffffff",
-                   cell_padding = 6) {
+                   cell_padding = 6,
+                   centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#ffffff",
@@ -552,8 +586,7 @@ flatly <- function(font_family = "Georgia",
     stripedColor = "#ecf0f1",
     highlightColor = "#ecf0f1",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#2c3e50",
@@ -561,12 +594,10 @@ flatly <- function(font_family = "Georgia",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#1cbc9c"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#1cbc9c"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontFamily = header_font_family,
                              fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
@@ -605,17 +636,11 @@ flatly <- function(font_family = "Georgia",
 #'
 #' Bootstrap-inspired journal theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Tahoma.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #222222.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Tahoma.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -625,6 +650,9 @@ flatly <- function(font_family = "Georgia",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -637,21 +665,32 @@ flatly <- function(font_family = "Georgia",
 #' reactable(data,
 #'           theme = journal())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = journal(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-journal <- function(font_family = "Tahoma",
-                    font_size = 14,
+journal <- function(font_size = 14,
                     font_color = "#222222",
-                    header_font_family = "Tahoma",
                     header_font_size = 15,
                     header_font_color = "#fad9d8",
-                    cell_padding = 6) {
+                    cell_padding = 6,
+                    centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#aaaaaa",
@@ -659,8 +698,7 @@ journal <- function(font_family = "Tahoma",
     stripedColor = "#eeeeee",
     highlightColor = "#eeeeee",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#ef8683",
@@ -668,13 +706,10 @@ journal <- function(font_family = "Tahoma",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
-      "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+      "&:not(:empty)" = list(color = font_color),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -713,17 +748,11 @@ journal <- function(font_family = "Tahoma",
 #'
 #' Bootstrap-inspired lux theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Tahoma.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #8c8c8c.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Tahoma.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -733,6 +762,9 @@ journal <- function(font_family = "Tahoma",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -745,21 +777,32 @@ journal <- function(font_family = "Tahoma",
 #' reactable(data,
 #'           theme = lux())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = lux(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-lux <- function(font_family = "Tahoma",
-                font_size = 14,
+lux <- function(font_size = 14,
                 font_color = "#8c8c8c",
-                header_font_family = "Tahoma",
                 header_font_size = 15,
                 header_font_color = "#7f7f7f",
-                cell_padding = 6) {
+                cell_padding = 6,
+                centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#f7f7f9",
@@ -767,8 +810,7 @@ lux <- function(font_family = "Tahoma",
     stripedColor = "#dadada",
     highlightColor = "#f7f7f9",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#1a1a1a",
@@ -777,14 +819,12 @@ lux <- function(font_family = "Tahoma",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(textTransform = "uppercase",
                              color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -823,17 +863,11 @@ lux <- function(font_family = "Tahoma",
 #'
 #' Bootstrap-inspired minty theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Helvetica.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #9a9a9a.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Helvetica.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 16.
@@ -843,6 +877,9 @@ lux <- function(font_family = "Tahoma",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -855,21 +892,32 @@ lux <- function(font_family = "Tahoma",
 #' reactable(data,
 #'           theme = minty())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = minty(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-minty <- function(font_family = "Helvetica",
-                  font_size = 15,
+minty <- function(font_size = 15,
                   font_color = "#9a9a9a",
-                  header_font_family = "Helvetica",
                   header_font_size = 16,
                   header_font_color = "#c9e7de",
-                  cell_padding = 6) {
+                  cell_padding = 6,
+                  centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#f7f7f9",
@@ -877,8 +925,7 @@ minty <- function(font_family = "Helvetica",
     stripedColor = "#ededed",
     highlightColor = "#f7f7f9",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#78c2ad",
@@ -886,13 +933,11 @@ minty <- function(font_family = "Helvetica",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -930,17 +975,11 @@ minty <- function(font_family = "Helvetica",
 #'
 #' Bootstrap-inspired sandstone theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Georgia.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #3e3f3a.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Georgia.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 16.
@@ -950,6 +989,9 @@ minty <- function(font_family = "Helvetica",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -962,21 +1004,32 @@ minty <- function(font_family = "Helvetica",
 #' reactable(data,
 #'           theme = sandstone())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = sandstone(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-sandstone <- function(font_family = "Georgia",
-                      font_size = 15,
+sandstone <- function(font_size = 15,
                       font_color = "#3e3f3a",
-                      header_font_family = "Georgia",
                       header_font_size = 16,
                       header_font_color = "#7c7a78",
-                      cell_padding = 6) {
+                      cell_padding = 6,
+                      centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#f8f5f0",
@@ -984,8 +1037,7 @@ sandstone <- function(font_family = "Georgia",
     stripedColor = "#ededed",
     highlightColor = "#f8f5f0",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#f8f5f0",
@@ -993,13 +1045,11 @@ sandstone <- function(font_family = "Georgia",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#000000"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#000000"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -1041,17 +1091,11 @@ sandstone <- function(font_family = "Georgia",
 #'
 #' Bootstrap-inspired slate theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Arial.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #aaaaaa.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Arial.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 16.
@@ -1061,6 +1105,9 @@ sandstone <- function(font_family = "Georgia",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1073,21 +1120,32 @@ sandstone <- function(font_family = "Georgia",
 #' reactable(data,
 #'           theme = slate())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = slate(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-slate <- function(font_family = "Arial",
-                  font_size = 15,
+slate <- function(font_size = 15,
                   font_color = "#aaaaaa",
-                  header_font_family = "Arial",
                   header_font_size = 16,
                   header_font_color = "#97999b",
-                  cell_padding = 6) {
+                  cell_padding = 6,
+                  centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#272b30",
     borderColor = "#272b30",
@@ -1095,8 +1153,7 @@ slate <- function(font_family = "Arial",
     stripedColor = "#464a4d",
     highlightColor = "#464a4d",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#3a3f44",
@@ -1104,13 +1161,11 @@ slate <- function(font_family = "Arial",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(backgroundColor = "#141516", color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(backgroundColor = "#141516", color = "#ffffff"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontSize = header_font_size,
-                             fontFamily = header_font_family),
+                             fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
         transitionDuration = "1s",
@@ -1149,17 +1204,11 @@ slate <- function(font_family = "Arial",
 #'
 #' Bootstrap-inspired spacelab theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Georgia.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #8e8e8e.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Georgia.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -1169,6 +1218,9 @@ slate <- function(font_family = "Arial",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1181,21 +1233,32 @@ slate <- function(font_family = "Arial",
 #' reactable(data,
 #'           theme = spacelab())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = spacelab(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-spacelab <- function(font_family = "Georgia",
-                     font_size = 14,
+spacelab <- function(font_size = 14,
                      font_color = "#8e8e8e",
-                     header_font_family = "Georgia",
                      header_font_size = 15,
                      header_font_color = "#8e8e8e",
-                     cell_padding = 6) {
+                     cell_padding = 6,
+                     centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#eeeeee",
@@ -1203,8 +1266,7 @@ spacelab <- function(font_family = "Georgia",
     stripedColor = "#dadada",
     highlightColor = "#dadada",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#ededed",
@@ -1212,12 +1274,10 @@ spacelab <- function(font_family = "Georgia",
       transitionDuration = "0.5s",
       "&:hover[aria-sort]" = list(color = "#349cf4"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#349cf4"),
-      fontFamily = header_font_family,
       fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontFamily = header_font_family,
                              fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
@@ -1250,17 +1310,11 @@ spacelab <- function(font_family = "Georgia",
 #'
 #' Bootstrap-inspired superhero theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Georgia.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #ebebeb.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Georgia.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -1270,6 +1324,9 @@ spacelab <- function(font_family = "Georgia",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1282,21 +1339,32 @@ spacelab <- function(font_family = "Georgia",
 #' reactable(data,
 #'           theme = superhero())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = superhero(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-superhero <- function(font_family = "Georgia",
-                      font_size = 14,
+superhero <- function(font_size = 14,
                       font_color = "#ebebeb",
-                      header_font_family = "Georgia",
                       header_font_size = 15,
                       header_font_color = "#ebebeb",
-                      cell_padding = 6) {
+                      cell_padding = 6,
+                      centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#2b3e50",
     borderColor = "#2b3e50",
@@ -1304,8 +1372,7 @@ superhero <- function(font_family = "Georgia",
     stripedColor = "#4a5969",
     highlightColor = "#4a5969",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       backgroundColor = "#4e5d6c",
@@ -1313,12 +1380,10 @@ superhero <- function(font_family = "Georgia",
       transitionDuration = "0.5s",
       "&:hover[aria-sort], &:focus" = list(color = "#ffffff"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(color = "#ffffff"),
-      fontFamily = header_font_family,
       fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(color = font_color,
-                             fontFamily = header_font_family,
                              fontSize = header_font_size),
       "&:hover" = list(
         fontWeight = "bold",
@@ -1346,17 +1411,11 @@ superhero <- function(font_family = "Georgia",
 #'
 #' ESPN-inspired table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Arial.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 12.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #6C6D6F.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Arial.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 11.
@@ -1366,6 +1425,9 @@ superhero <- function(font_family = "Georgia",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 7.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1378,21 +1440,32 @@ superhero <- function(font_family = "Georgia",
 #' reactable(data,
 #'           theme = espn())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = espn(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-espn <- function(font_family = "Arial",
-                 font_size = 12,
+espn <- function(font_size = 12,
                  font_color = "#6C6D6F",
-                 header_font_family = "Arial",
                  header_font_size = 11,
                  header_font_color = "#48494a",
-                 cell_padding = 7) {
+                 cell_padding = 7,
+                 centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderWidth = "1px",
@@ -1400,8 +1473,7 @@ espn <- function(font_family = "Arial",
     stripedColor = "#fafafa",
     highlightColor = "#fafafa",
     cellPadding = cell_padding,
-    tableStyle = list(fontSize = font_size,
-                      fontFamily = font_family),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderTop = "1px solid #e1e2e4",
       borderBottom = "1px solid #e1e2e4",
@@ -1411,8 +1483,7 @@ espn <- function(font_family = "Arial",
       color = header_font_color,
       textTransform = "uppercase",
       "&:hover" = list(color = "#004D9A"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       borderTop = "1px solid #e1e2e4",
@@ -1422,8 +1493,7 @@ espn <- function(font_family = "Arial",
       textTransform = "uppercase",
       fontSize = "11px",
       color = font_color,
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     searchInputStyle = list(color = "#6C6D6F",
                             fontSize = "13px"),
@@ -1440,17 +1510,11 @@ espn <- function(font_family = "Arial",
 #'
 #' 538-inspired table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Helvetica.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #222222.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Helvetica.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 12.
@@ -1460,6 +1524,9 @@ espn <- function(font_family = "Arial",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 5.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1472,21 +1539,32 @@ espn <- function(font_family = "Arial",
 #' reactable(data,
 #'           theme = fivethirtyeight())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = fivethirtyeight(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-fivethirtyeight <- function(font_family = "Helvetica",
-                            font_size = 14,
+fivethirtyeight <- function(font_size = 14,
                             font_color = "#222222",
-                            header_font_family = "Helvetica",
                             header_font_size = 12,
                             header_font_color = "#000000",
-                            cell_padding = 5) {
+                            cell_padding = 5,
+                            centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderWidth = "1px",
@@ -1495,7 +1573,6 @@ fivethirtyeight <- function(font_family = "Helvetica",
     highlightColor = "#f0f0f0",
     cellPadding = cell_padding,
     tableStyle = list(
-      fontFamily = font_family,
       fontSize = font_size,
       borderBottom = "3px solid #222222"
     ),
@@ -1511,8 +1588,7 @@ fivethirtyeight <- function(font_family = "Helvetica",
       "&:hover" = list(background = "#dddddd"),
       "&[aria-sort='ascending'], &[aria-sort='descending']" = list(background = "#5b5e5f", color = "#ffffff"),
       borderColor = "#333",
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(
@@ -1522,7 +1598,6 @@ fivethirtyeight <- function(font_family = "Helvetica",
         backgroundColor = "#ffffff",
         textTransform = "uppercase",
         fontSize = header_font_size,
-        fontFamily = header_font_family,
         color = font_color
       )
     ),
@@ -1543,17 +1618,11 @@ fivethirtyeight <- function(font_family = "Helvetica",
 #'
 #' The New York Times-inspired table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Helvetica.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 13.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #333333.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Helvetica.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 11.
@@ -1563,6 +1632,9 @@ fivethirtyeight <- function(font_family = "Helvetica",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 5.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1575,21 +1647,32 @@ fivethirtyeight <- function(font_family = "Helvetica",
 #' reactable(data,
 #'           theme = nytimes())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = nytimes(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-nytimes <- function(font_family = "Helvetica",
-                    font_size = 13,
+nytimes <- function(font_size = 13,
                     font_color = "#333333",
-                    header_font_family = "Helvetica",
                     header_font_size = 11,
                     header_font_color = "#999999",
-                    cell_padding = 5) {
+                    cell_padding = 5,
+                    centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderWidth = "1px",
@@ -1597,8 +1680,7 @@ nytimes <- function(font_family = "Helvetica",
     stripedColor = "#e7e7e7",
     highlightColor = "#eeeeee",
     cellPadding = cell_padding,
-    tableStyle = list(fontSize = font_size,
-                      fontFamily = font_family),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "0px",
       padding = "5px",
@@ -1607,8 +1689,7 @@ nytimes <- function(font_family = "Helvetica",
       color = header_font_color,
       fontWeight = "500",
       textTransform = "uppercase",
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       "&:not(:empty)" = list(
@@ -1616,7 +1697,6 @@ nytimes <- function(font_family = "Helvetica",
         backgroundColor = "#ffffff",
         textTransform = "uppercase",
         fontSize = header_font_size,
-        fontFamily = header_font_family,
         borderColor = "#ffffff",
         color = font_color
       )
@@ -1636,17 +1716,11 @@ nytimes <- function(font_family = "Helvetica",
 #'
 #' Pro Football Focus-inspired table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Arial.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 16.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #878e94.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Arial.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 12.
@@ -1656,6 +1730,9 @@ nytimes <- function(font_family = "Helvetica",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 4.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1668,29 +1745,39 @@ nytimes <- function(font_family = "Helvetica",
 #' reactable(data,
 #'           theme = pff())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = pff(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-pff <- function(font_family = "Arial",
-                font_size = 16,
+pff <- function(font_size = 16,
                 font_color = "#878e94",
-                header_font_family = "Arial",
                 header_font_size = 12,
                 header_font_color = "#ffffff",
-                cell_padding = 4) {
+                cell_padding = 4,
+                centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderWidth = "0px",
     stripedColor = "#f9f9fb",
     highlightColor = "#f1f3f4",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "1px",
       padding = "7px",
@@ -1712,7 +1799,6 @@ pff <- function(font_family = "Arial",
         boxShadow = "inset 0 -3px 0 0 #ffffff"
       ),
       fontSize = header_font_size,
-      fontFamily = header_font_family,
       fontWeight = "bold"
     ),
     groupHeaderStyle = list(
@@ -1721,7 +1807,6 @@ pff <- function(font_family = "Arial",
         textTransform = "uppercase",
         fontWeight = "bold",
         color = font_color,
-        fontFamily = header_font_family,
         fontSize = header_font_size,
         boxShadow = "inset 3px 0 0 0 #ffffff"
       )
@@ -1756,12 +1841,109 @@ pff <- function(font_family = "Arial",
 }
 
 
+#' Theme sanfran
+#'
+#' San Francisco Chronicles-inspired table theme
+#'
+#' @param font_size Numeric value representing the size of the font within the table (in px).
+#'      Default is 14.
+#'
+#' @param font_color Color of the font for the text within the table.
+#'      Default is #222222.
+#'
+#' @param header_font_size Numeric value representing the size of the font within the table (in px).
+#'      Default is 15.
+#'
+#' @param header_font_color Color of the font for the header text.
+#'      Default is transparent
+#'
+#' @param cell_color Color of the background of the cells.
+#'      Default is #f5f5f5.
+#'
+#' @param cell_border_width Numeric value representing the border width of the cells.
+#'      Default is 6.
+#'
+#' @param cell_border_color Numeric value representing the border color of the cells.
+#'      Default is #ffffff.
+#'
+#' @param cell_padding Numeric value representing the padding size between cells (in px).
+#'      Default is 6.
+#'
+#' @param pagination_color Color of the pagination below the table.
+#'      Default is #222222.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
+#'
+#' @return an object of class theme that is applied to a reactable table.
+#'
+#' @import reactable
+#'
+#' @examples
+#' data <- iris[10:29, ]
+#'
+#' ## Standard void theme
+#' reactable(data,
+#'           theme = sanfran())
+#'
+#' ## Additional options applied
+#' reactable(data,
+#'           theme = sanfran(font_size = 12, font_color = "grey"))
+#'
+#' @export
+
+sanfran <- function(font_size = 14,
+                    font_color = "#222222",
+                    header_font_size = 15,
+                    header_font_color = "#212121",
+                    cell_color = "#f5f5f5",
+                    cell_border_width = 6,
+                    cell_border_color = "#ffffff",
+                    cell_padding = 6,
+                    pagination_color = "#222222",
+                    centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex",
+                            flexDirection = "column",
+                            justifyContent = "center",
+                            background = cell_color,
+                            borderWidth = cell_border_width,
+                            borderColor = cell_border_color)
+
+  } else {
+
+    centered_content = list(background = cell_color,
+                        borderWidth = cell_border_width,
+                        borderColor = cell_border_color)
+  }
+
+  reactableTheme(
+    color = font_color,
+    backgroundColor = "transparent",
+    borderColor = "#f5f5f5",
+    stripedColor = "lightgrey",
+    highlightColor = "lightgrey",
+    cellPadding = cell_padding,
+    cellStyle = centered_content,
+    tableStyle = list(fontSize = font_size),
+    headerStyle = list(color = header_font_color,
+                       fontSize = header_font_size),
+    selectStyle = list(color = pagination_color),
+    paginationStyle = list(color = pagination_color)
+  )
+}
+
+
 #' Theme hoverdark
 #'
 #' Changes from light-themed to dark-themed on hover
-#'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
 #'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -1769,14 +1951,14 @@ pff <- function(font_family = "Arial",
 #' @param font_color Color of the font for the text within the table.
 #'      Default is #222222.
 #'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
-#'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 4.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1789,20 +1971,31 @@ pff <- function(font_family = "Arial",
 #' reactable(data,
 #'           theme = hoverdark())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = hoverdark(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-hoverdark <- function(font_family = "Verdana",
-                      font_size = 15,
+hoverdark <- function(font_size = 15,
                       font_color = "#222222",
-                      header_font_family = "Verdana",
                       header_font_size = 15,
-                      cell_padding = 4) {
+                      cell_padding = 4,
+                      centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "grey",
@@ -1813,13 +2006,11 @@ hoverdark <- function(font_family = "Verdana",
     tableStyle = list(
       transitionDuration = "2s",
       "&:hover" = list(backgroundColor = "black", color = "#ffffff"),
-      fontFamily = font_family,
       fontSize = font_size
     ),
     headerStyle = list(
       borderWidth = "2px",
       "&:hover" = list(borderColor = "#ffffff"),
-      fontFamily = header_font_family,
       fontSize = header_font_size
     )
   )
@@ -1830,23 +2021,20 @@ hoverdark <- function(font_family = "Verdana",
 #'
 #' Changes from dark-themed to light-themed on hover
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table.
 #'      Default is #ffffff.
 #'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
-#'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 4.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1859,20 +2047,31 @@ hoverdark <- function(font_family = "Verdana",
 #' reactable(data,
 #'           theme = hoverlight())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = hoverlight(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-hoverlight <- function(font_family = "Verdana",
-                       font_size = 15,
+hoverlight <- function(font_size = 15,
                        font_color = "#ffffff",
-                       header_font_family = "Verdana",
                        header_font_size = 15,
-                       cell_padding = 4) {
+                       cell_padding = 4,
+                       centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#000000",
     borderColor = "grey",
@@ -1883,16 +2082,120 @@ hoverlight <- function(font_family = "Verdana",
     tableStyle = list(
       transitionDuration = "2s",
       "&:hover" = list(backgroundColor = "white", color = "#000000"),
-      fontFamily = font_family,
       fontSize = font_size
     ),
     headerStyle = list(
       borderWidth = "2px",
       "&:hover" = list(borderColor = "black"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     paginationStyle = list(backgroundColor = "#ffffff", color = "black")
+  )
+}
+
+
+#' Theme dark
+#'
+#' dark table theme
+#'
+#' @param font_size Numeric value representing the size of the font within the table (in px).
+#'      Default is 15.
+#'
+#' @param font_color Color of the font for the text within the table and the group headers.
+#'      Default is #FFFFFF.
+#'
+#' @param header_font_size Numeric value representing the size of the font within the table (in px).
+#'      Default is 16.
+#'
+#' @param header_font_color Color of the font for the header text.
+#'      Default is #FFFFFF.
+#'
+#' @param cell_padding Numeric value representing the padding size between cells (in px).
+#'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
+#'
+#' @return an object of class theme that is applied to a reactable table.
+#'
+#' @import reactable
+#'
+#' @examples
+#' data <- iris[10:29, ]
+#'
+#' ## Standard dark theme
+#' reactable(data,
+#'           theme = dark())
+#'
+#' ## Additional options applied
+#' reactable(data,
+#'           theme = dark(font_size = 12, font_color = "red", cell_padding = 3))
+#'
+#' @export
+
+dark <- function(font_size = 15,
+                 font_color = "#FFFFFF",
+                 header_font_size = 16,
+                 header_font_color = "#FFFFFF",
+                 cell_padding = 6,
+                 centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+  centered_content <- list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else {
+
+  centered_content <- list(display = "flex")
+  }
+
+  reactableTheme(
+    color = font_color,
+    backgroundColor = "#252525",
+    borderWidth = "1px",
+    borderColor = "#434343",
+    stripedColor = "#303030",
+    highlightColor = "#303030",
+    cellPadding = cell_padding,
+    style = list(backgroundColor = "#252525"),
+    tableStyle = list(fontSize = font_size),
+    cellStyle = centered_content,
+    headerStyle = list(
+      borderWidth = "2px",
+      backgroundColor = "#252525",
+      color = header_font_color,
+      borderColor = "#ececec",
+      fontSize = header_font_size
+    ),
+    groupHeaderStyle = list(
+      backgroundColor = "#252525",
+      fontSize = header_font_size,
+      color = font_color
+    ),
+    searchInputStyle = list(
+      backgroundColor = "#ffffff",
+      color = "#252525"
+    ),
+    inputStyle = list(backgroundColor = "#ffffff", color = "#252525"),
+    rowSelectedStyle = list(backgroundImage = "linear-gradient(#191919, #252525)"),
+    selectStyle = list(
+      backgroundImage = "linear-gradient(#191919, #252525)",
+      backgroundColor = "#999999",
+      borderColor = "#ffffff",
+      outlineColor = "#ffffff"
+    ),
+    pageButtonStyle = list(
+      backgroundImage = "linear-gradient(#191919, #252525)"
+    ),
+    pageButtonHoverStyle = list(color = "#ffffff"),
+    pageButtonActiveStyle = list(color = "#ffffff"),
+    pageButtonCurrentStyle = list(color = "#ffffff"),
+    paginationStyle = list(backgroundImage = "linear-gradient(#191919, #252525)")
   )
 }
 
@@ -1901,17 +2204,11 @@ hoverlight <- function(font_family = "Verdana",
 #'
 #' midnight table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Tahoma.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #727272.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Tahoma.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -1921,6 +2218,9 @@ hoverlight <- function(font_family = "Verdana",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -1933,19 +2233,42 @@ hoverlight <- function(font_family = "Verdana",
 #' reactable(data,
 #'           theme = midnight())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = midnight(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-midnight <- function(font_family = "Tahoma",
-                     font_size = 15,
+midnight <- function(font_size = 15,
                      font_color = "#727272",
-                     header_font_family = "Tahoma",
                      header_font_size = 15,
                      header_font_color = "#666666",
-                     cell_padding = 6) {
+                     cell_padding = 6,
+                     centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+  centered_content <- list(display = "flex", flexDirection = "column", justifyContent = "center",
+      "&:hover" = list(
+        transitionDuration = "0.25s",
+        transitionTimingFunction = "ease-out",
+        color = "#ffffff"
+      ))
+
+  } else {
+
+  centered_content <- list(
+      "&:hover" = list(
+        transitionDuration = "0.25s",
+        transitionTimingFunction = "ease-out",
+        color = "#ffffff"
+      ))
+  }
 
   reactableTheme(
     color = font_color,
@@ -1955,15 +2278,8 @@ midnight <- function(font_family = "Tahoma",
     highlightColor = "#00468c",
     cellPadding = cell_padding,
     style = list(backgroundColor = "#000000"),
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
-    cellStyle = list(
-      "&:hover" = list(
-        transitionDuration = "0.25s",
-        transitionTimingFunction = "ease-out",
-        color = "#ffffff"
-      )
-    ),
+    tableStyle = list(fontSize = font_size),
+    cellStyle = centered_content,
     tableBodyStyle = list(backgroundImage = "linear-gradient(#000000, #0d0d0d, #191919)"),
     headerStyle = list(
       borderWidth = "0px",
@@ -1978,13 +2294,11 @@ midnight <- function(font_family = "Tahoma",
         borderBottomColor = "#ffffff",
         borderWidth = "1px"
       ),
-      fontFamily = header_font_family,
-      fonSize = header_font_size
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       backgroundColor = "#000000",
-      fontFamily = header_font_family,
-      fonSize = header_font_size,
+      fontSize = header_font_size,
       color = font_color,
       "&:hover" = list(
         fontWeight = "bold",
@@ -2022,17 +2336,11 @@ midnight <- function(font_family = "Tahoma",
 #'
 #' midnightblue table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Tahoma.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #bababa.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Tahoma.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -2042,6 +2350,9 @@ midnight <- function(font_family = "Tahoma",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -2054,20 +2365,43 @@ midnight <- function(font_family = "Tahoma",
 #' reactable(data,
 #'           theme = midnightblue())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = midnightblue(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
 
-midnightblue <- function(font_family = "Tahoma",
-                         font_size = 15,
+midnightblue <- function(font_size = 15,
                          font_color = "#bababa",
-                         header_font_family = "Tahoma",
                          header_font_size = 15,
                          header_font_color = "lightgrey",
-                         cell_padding = 6) {
+                         cell_padding = 6,
+                         centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+  centered_content <- list(display = "flex", flexDirection = "column", justifyContent = "center",
+      "&:hover" = list(
+        transitionDuration = "0.25s",
+        transitionTimingFunction = "ease-out",
+        color = "#ffffff"
+      ))
+
+  } else {
+
+  centered_content <- list(
+      "&:hover" = list(
+        transitionDuration = "0.25s",
+        transitionTimingFunction = "ease-out",
+        color = "#ffffff"
+      ))
+  }
 
   reactableTheme(
     color = font_color,
@@ -2077,15 +2411,8 @@ midnightblue <- function(font_family = "Tahoma",
     highlightColor = "#00468c",
     cellPadding = cell_padding,
     style = list(backgroundColor = "#001021"),
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
-    cellStyle = list(
-      "&:hover" = list(
-        transitionDuration = "0.25s",
-        transitionTimingFunction = "ease-out",
-        color = "#ffffff"
-      )
-    ),
+    tableStyle = list(fontSize = font_size),
+    cellStyle = centered_content,
     tableBodyStyle = list(backgroundImage = "linear-gradient(#001021, #001c3a, #002853)"),
     headerStyle = list(
       borderWidth = "1px",
@@ -2101,13 +2428,11 @@ midnightblue <- function(font_family = "Tahoma",
         borderBottomColor = "#ffffff",
         borderWidth = "1px"
       ),
-      fontFamily = header_font_family,
-      fonSize = header_font_size
+      fontSize = header_font_size
     ),
     groupHeaderStyle = list(
       backgroundColor = "#001021",
-      fontFamily = header_font_family,
-      fonSize = header_font_size,
+      fontSize = header_font_size,
       color = font_color,
       "&:hover" = list(
         fontWeight = "bold",
@@ -2145,17 +2470,11 @@ midnightblue <- function(font_family = "Tahoma",
 #'
 #' sunrise table theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Tahoma.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param font_color Color of the font for the text within the table and the group headers.
 #'      Default is #8069ff.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Tahoma.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -2165,6 +2484,9 @@ midnightblue <- function(font_family = "Tahoma",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -2177,19 +2499,42 @@ midnightblue <- function(font_family = "Tahoma",
 #' reactable(data,
 #'           theme = sunrise())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = sunrise(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-sunrise <- function(font_family = "Tahoma",
-                    font_size = 15,
+sunrise <- function(font_size = 15,
                     font_color = "#8069ff",
-                    header_font_family = "Tahoma",
                     header_font_size = 15,
                     header_font_color = "#8069ff",
-                    cell_padding = 6) {
+                    cell_padding = 6,
+                    centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+  centered_content <- list(display = "flex", flexDirection = "column", justifyContent = "center",
+      "&:hover" = list(
+        transitionDuration = "0.25s",
+        transitionTimingFunction = "ease-out",
+        color = "#699dff"
+      ))
+
+  } else {
+
+  centered_content <- list(
+      "&:hover" = list(
+        transitionDuration = "0.25s",
+        transitionTimingFunction = "ease-out",
+        color = "#699dff"
+      ))
+  }
 
   reactableTheme(
     color = font_color,
@@ -2200,12 +2545,9 @@ sunrise <- function(font_family = "Tahoma",
     cellPadding = cell_padding,
     style = list(backgroundColor = "#fffa85"),
     tableStyle = list(
-      fontFamily = font_family,
       fontSize = font_size
     ),
-    cellStyle = list("&:hover" = list(transitionDuration = "0.25s",
-                                      transitionTimingFunction = "ease-out",
-                                      color = "#699dff")),
+    cellStyle = centered_content,
     tableBodyStyle = list(backgroundImage = "linear-gradient(#fffa85, #ffe269, #ffcb69, #f98d77)"),
     headerStyle = list(
       borderWidth = "1px",
@@ -2217,8 +2559,7 @@ sunrise <- function(font_family = "Tahoma",
       "&:hover[aria-sort]" = list(color = "#699dff"),
       "&[aria-sort='ascending']" = list(color = "#699dff", boxShadow = "inset 0 1px 0 0 #699dff"),
       "&[aria-sort='descending']" = list(color = "#699dff", borderBottomColor = "#699dff", borderWidth = "1px"),
-      fontSize = header_font_size,
-      fontFamily = header_font_family),
+      fontSize = header_font_size),
     groupHeaderStyle = list(
       backgroundColor = "#fffa85",
       "&:hover" = list(
@@ -2226,8 +2567,7 @@ sunrise <- function(font_family = "Tahoma",
         transitionDuration = "1s",
         transitionTimingFunction = "ease-out",
         color = font_color,
-        fontSize = header_font_size,
-        fontFamily = header_font_family
+        fontSize = header_font_size
       )
     ),
     searchInputStyle = list(
@@ -2253,17 +2593,11 @@ sunrise <- function(font_family = "Tahoma",
 #'
 #' Simple clean-look theme
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table.
 #'      Default is #222222.
-#'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
 #'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
@@ -2273,6 +2607,9 @@ sunrise <- function(font_family = "Tahoma",
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @return an object of class theme that is applied to a reactable table.
 #'
@@ -2285,37 +2622,124 @@ sunrise <- function(font_family = "Tahoma",
 #' reactable(data,
 #'           theme = clean())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = clean(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-clean <- function(font_family = "Verdana",
-                  font_size = 14,
+clean <- function(font_size = 14,
                   font_color = "#222222",
-                  header_font_family = "Verdana",
                   header_font_size = 15,
                   header_font_color = "#222222",
-                  cell_padding = 6) {
+                  cell_padding = 6,
+                  centered = FALSE) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex", flexDirection = "column", justifyContent = "center")
+
+  } else { centered_content = NULL }
 
   reactableTheme(
+    cellStyle = centered_content,
     color = font_color,
     backgroundColor = "#ffffff",
     borderColor = "#ffffff",
     stripedColor = "#e0e0e0",
     highlightColor = "#e0e0e0",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(
       borderWidth = "2px",
       borderColor = "#3b3b3b",
       color = header_font_color,
-      fontSize = header_font_size,
-      fontFamily = header_font_family
+      fontSize = header_font_size
     ),
     rowSelectedStyle = list(backgroundColor = "#e0e0e0")
+  )
+}
+
+
+#' Theme no_lines
+#'
+#' A table style with no lines or borders
+#'
+#' @param font_size Numeric value representing the size of the font within the table (in px).
+#'      Default is 14.
+#'
+#' @param font_color Color of the font for the text within the table.
+#'      Default is #222222.
+#'
+#' @param header_font_size Numeric value representing the size of the font within the table (in px).
+#'      Default is 15.
+#'
+#' @param header_font_color Color of the font for the header text.
+#'      Default is transparent
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
+#'
+#' @param cell_padding Numeric value representing the padding size between cells (in px).
+#'      Default is 6.
+#'
+#' @return an object of class theme that is applied to a reactable table.
+#'
+#' @import reactable
+#'
+#' @examples
+#' data <- iris[10:29, ]
+#'
+#' ## Standard no_lines theme
+#' reactable(data,
+#'           theme = no_lines())
+#'
+#' ## Additional options applied
+#' reactable(data,
+#'           theme = no_lines(font_size = 12, font_color = "grey", cell_padding = 3))
+#'
+#' @export
+
+no_lines <- function(font_size = 14,
+                 font_color = "#222222",
+                 header_font_size = 15,
+                 header_font_color = "#222222",
+                 centered = FALSE,
+                 cell_padding = 6) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex",
+                            flexDirection = "column",
+                            justifyContent = "center",
+                            borderColor = "transparent")
+
+  } else { centered_content = list(borderColor = "transparent") }
+
+  reactableTheme(
+    color = font_color,
+    backgroundColor = "transparent",
+    stripedColor = "lightgrey",
+    highlightColor = "lightgrey",
+    cellPadding = cell_padding,
+    cellStyle = centered_content,
+    tableStyle = list(fontSize = font_size),
+    headerStyle = list(color = header_font_color,
+                       borderColor = "transparent",
+                       fontSize = header_font_size),
+    selectStyle = list(color = "transparent"),
+    paginationStyle = list(color = "transparent",
+                           borderColor = "transparent")
   )
 }
 
@@ -2324,23 +2748,32 @@ clean <- function(font_family = "Verdana",
 #'
 #' A table style completely void of borders and headers
 #'
-#' @param font_family Font family for the text within the table.
-#'      Default is Verdana.
-#'
 #' @param font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 14.
 #'
 #' @param font_color Color of the font for the text within the table.
 #'      Default is #222222.
 #'
-#' @param header_font_family Font family for the header text.
-#'      Default is Verdana.
-#'
 #' @param header_font_size Numeric value representing the size of the font within the table (in px).
 #'      Default is 15.
 #'
 #' @param header_font_color Color of the font for the header text.
 #'      Default is transparent
+#'
+#' @param border_color Color of the borders between cells.
+#'      Default is transparent.
+#'
+#' @param border_width Numeric value representing the border width between cells (in px).
+#'      Default is 0.
+#'
+#' @param header_border_color Color of the bottom border of the header.
+#'      Default is transparent.
+#'
+#' @param header_border_width Numeric value representing the bottom border width of the header (in px).
+#'      Default is 0.
+#'
+#' @param centered Logical: vertically center the contents of the table.
+#'     Default is FALSE.
 #'
 #' @param cell_padding Numeric value representing the padding size between cells (in px).
 #'      Default is 6.
@@ -2356,31 +2789,49 @@ clean <- function(font_family = "Verdana",
 #' reactable(data,
 #'           theme = void())
 #'
-#' ## Cerulean theme with additional options applied
+#' ## Additional options applied
 #' reactable(data,
 #'           theme = void(font_size = 12, font_color = "grey", cell_padding = 3))
 #'
 #' @export
 
-void <- function(font_family = "Verdana",
-                 font_size = 14,
+void <- function(font_size = 14,
                  font_color = "#222222",
-                 header_font_family = "Verdana",
                  header_font_size = 15,
                  header_font_color = "transparent",
+                 border_color = "transparent",
+                 border_width = 0,
+                 header_border_color = "transparent",
+                 header_border_width = 0,
+                 centered = FALSE,
                  cell_padding = 6) {
+
+  if (!is.logical(centered)) {
+
+    stop("`centered` must be TRUE or FALSE")
+  }
+
+  if (centered == TRUE) {
+
+    centered_content = list(display = "flex",
+                            flexDirection = "column",
+                            justifyContent = "center",
+                            borderColor = border_color,
+                            borderWidth = border_width)
+
+  } else { centered_content = list(borderColor = border_color,
+                                   borderWidth = border_width) }
 
   reactableTheme(
     color = font_color,
     backgroundColor = "transparent",
-    borderColor = "transparent",
     stripedColor = "lightgrey",
     highlightColor = "lightgrey",
     cellPadding = cell_padding,
-    tableStyle = list(fontFamily = font_family,
-                      fontSize = font_size),
+    cellStyle = centered_content,
+    tableStyle = list(fontSize = font_size),
     headerStyle = list(color = header_font_color,
-                       fontFamily = header_font_family,
+                       borderBottom = paste0("", header_border_width, "px solid ", header_border_color, ""),
                        fontSize = header_font_size),
     selectStyle = list(color = "transparent"),
     paginationStyle = list(color = "transparent")

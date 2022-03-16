@@ -14,20 +14,36 @@
 #'
 #' @param colors A vector of colors to color the cells.
 #'     Colors should be given in order from low values to high values.
-#'     Default colors provided are blue-white-orange: c("#67a9cf", "#f8fcf8", "#ef8a62").
+#'     Default colors provided are blue-white-orange: c("#15607A", "#FFFFFF", "#FA8C00").
 #'     Can use R's built-in colors or other color packages.
 #'
-#' @param color_ref Optionally assign colors to from another column
-#'     by providing the name of the column containing the colors in quotes.
+#' @param color_ref Assign colors from another column that contains the colors for each row.
 #'     Only one color can be provided per row.
 #'     Default is NULL.
+#'
+#' @param color_by Assign colors to a column based on the values of another column.
+#'    The column in reference must contain numeric data.
+#'    The column in which the colors are being assigned to can be either numerical or character.
+#'    Default is NULL.
 #'
 #' @param opacity A value between 0 and 1 that adjusts the opacity in colors.
 #'     A value of 0 is fully transparent, a value of 1 is fully opaque.
 #'     Default is 1.
 #'
+#' @param bias A positive value that determines the spacing between multiple colors.
+#'     A higher value spaces out the colors at the higher end more than a lower number.
+#'     Default is 1.
+#'
+#' @param text_size Numeric value representing the size of the text labels.
+#'     Default is NULL.
+#'
 #' @param text_color Assigns text color to values.
 #'     Default is black.
+#'
+#' @param text_color_ref Assign text color from another column
+#'     by providing the name of the column containing the text colors in quotes.
+#'     Only one color can be provided per cell.
+#'     Default is NULL.
 #'
 #' @param show_text Logical: show text or hide text.
 #'     Default is TRUE.
@@ -46,6 +62,13 @@
 #'     To apply across all columns set to TRUE.
 #'     If applying to a set of columns, can provide either column names or column positions.
 #'     Default is set to FALSE.
+#'
+#' @param animation Control the duration and timing function of the animation
+#'     when sorting/updating values shown on a page.
+#'     See [CSS transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+#'     for available timing functions and examples.
+#'     Animation can be turned off by setting to "none".
+#'     Default is "background 1s ease".
 #'
 #' @return a function that applies conditional colors
 #'     to a column of numeric values.
@@ -88,15 +111,20 @@
 #' @export
 
 color_scales <- function(data,
-                         colors = c("#67a9cf", "#f8fcf8", "#ef8a62"),
+                         colors = c("#15607A", "#FFFFFF", "#FA8C00"),
                          color_ref = NULL,
+                         color_by = NULL,
                          opacity = 1,
+                         bias = 1,
+                         text_size = NULL,
                          text_color = "black",
+                         text_color_ref = NULL,
                          show_text = TRUE,
                          brighten_text = TRUE,
                          brighten_text_color = "white",
                          bold_text = FALSE,
-                         span = FALSE) {
+                         span = FALSE,
+                         animation = "background 1s ease") {
 
   if (!is.logical(bold_text)) {
 
@@ -111,6 +139,11 @@ color_scales <- function(data,
   if (!is.numeric(opacity)) {
 
     stop("`opacity` must be numeric")
+  }
+
+  if (!is.numeric(bias)) {
+
+    stop("`bias` must be numeric")
   }
 
   if (opacity < 0 | opacity > 1) {
@@ -131,7 +164,7 @@ color_scales <- function(data,
   color_pal <- function(x) {
 
     if (!is.na(x))
-      rgb(colorRamp(c(colors))(x), maxColorValue = 255)
+      rgb(colorRamp(c(colors), bias = bias)(x), maxColorValue = 255)
     else
       NULL
   }
@@ -139,8 +172,8 @@ color_scales <- function(data,
   assign_color <- function(x) {
 
     if (!is.na(x)) {
-      rgb_sum <- rowSums(colorRamp(c(colors))(x))
-      color <- ifelse(rgb_sum >= 375, text_color, brighten_text_color)
+      rgb_sum <- rowSums(colorRamp(c(colors), bias = bias)(x))
+      color <- ifelse(rgb_sum >= 395, text_color, brighten_text_color)
       color
     } else
       NULL
@@ -154,7 +187,7 @@ color_scales <- function(data,
 
   style <- function(value, index, name) {
 
-    if (is.null(color_ref) & !is.numeric(value)) return(value)
+    if (is.null(color_ref) & is.null(color_by) & !is.numeric(value)) return(value)
 
     if (is.logical(span)) {
 
@@ -168,8 +201,74 @@ color_scales <- function(data,
 
       } else {
 
-        normalized <- (value - min(data[[name]], na.rm = TRUE))/(max(data[[name]], na.rm = TRUE) - min(data[[name]], na.rm = TRUE))
+      ### color_by
+      if (is.character(color_by)) {
 
+        # color_by column must be numeric
+        if (all(color_by %in% names(which(sapply(data, is.numeric))))) {
+
+          if (is.character(color_by)) { color_by <- which(names(data) %in% color_by) }
+
+          # if there is no variance in the column, assign the same color to each value
+          if (is.numeric(data[[color_by]]) & mean((data[[color_by]] - mean(data[[color_by]], na.rm=TRUE)) ^ 2, na.rm=TRUE) == 0) {
+
+            normalized <- 1
+
+          } else {
+
+            normalized <- (data[[color_by]][index] - min(data[[color_by]], na.rm = TRUE)) / (max(data[[color_by]], na.rm = TRUE) - min(data[[color_by]], na.rm = TRUE))
+
+          }
+
+          cell_color <- color_pal(normalized)
+          cell_color <- suppressWarnings(grDevices::adjustcolor(cell_color, alpha.f = opacity))
+          font_color <- assign_color(normalized)
+
+        } else {
+
+          stop("Attempted to select non-existing column or non-numeric column with color_by")
+        }
+
+      } else {
+
+          # standard normalization (no variance check)
+          if (is.numeric(value) & mean((data[[name]] - mean(data[[name]], na.rm=TRUE)) ^ 2, na.rm=TRUE) == 0) {
+
+            normalized <- 1
+
+          } else {
+
+            # standard normalization
+            normalized <- (value - min(data[[name]], na.rm = TRUE)) / (max(data[[name]], na.rm = TRUE) - min(data[[name]], na.rm = TRUE))
+
+          }
+
+        cell_color <- color_pal(normalized)
+        cell_color <- suppressWarnings(grDevices::adjustcolor(cell_color, alpha.f = opacity))
+        font_color <- assign_color(normalized)
+
+        }
+
+      }
+
+      ### conditional text color
+      if (is.character(text_color_ref)) {
+
+        if (all(text_color_ref %in% names(which(sapply(data, is.character))))) {
+
+          if (is.character(text_color_ref)) { text_color_ref <- which(names(data) %in% text_color_ref) }
+
+          font_color <- data[[text_color_ref]][index]
+          text_color <- data[[text_color_ref]][index]
+
+        } else {
+
+          stop("Attempted to select non-existing column or non-character column with text_color_ref")
+        }
+
+      } else {
+
+         font_color <- text_color
       }
 
       ### conditional fill color and font color
@@ -180,11 +279,11 @@ color_scales <- function(data,
           if (is.character(color_ref)) { color_ref <- which(names(data) %in% color_ref) }
 
           cell_color <- data[[color_ref]][index]
-          cell_color <- grDevices::adjustcolor(cell_color, alpha.f = opacity)
+          cell_color <- suppressWarnings(grDevices::adjustcolor(cell_color, alpha.f = opacity))
 
-          rgb_sum <- rowSums(grDevices::colorRamp(c(cell_color))(1))
+          rgb_sum <- rowSums(grDevices::colorRamp(c(cell_color), bias = bias)(1))
 
-          font_color <- ifelse(rgb_sum >= 375, text_color, brighten_text_color)
+          font_color <- ifelse(rgb_sum >= 395, text_color, brighten_text_color)
 
         } else {
 
@@ -194,7 +293,7 @@ color_scales <- function(data,
       } else {
 
         cell_color <- color_pal(normalized)
-        cell_color <- grDevices::adjustcolor(cell_color, alpha.f = opacity)
+        cell_color <- suppressWarnings(grDevices::adjustcolor(cell_color, alpha.f = opacity))
         font_color <- assign_color(normalized)
 
       }
@@ -206,7 +305,7 @@ color_scales <- function(data,
         if (is.character(span)) { span <- which(names(data) %in% span) }
 
         normalized <- (value - min(dplyr::select(data, !!span), na.rm = TRUE)) / (max(dplyr::select(data, !!span), na.rm = TRUE) - min(dplyr::select(data, !!span), na.rm = TRUE))
-        cell_color <- if (name %in% colnames(data)[span]) { grDevices::adjustcolor(color_pal(normalized), alpha.f = opacity) }
+        cell_color <- if (name %in% colnames(data)[span]) { suppressWarnings(grDevices::adjustcolor(color_pal(normalized), alpha.f = opacity)) }
         font_color <- if (name %in% colnames(data)[span]) { assign_color(normalized) }
 
       } else {
@@ -219,17 +318,22 @@ color_scales <- function(data,
 
     if (brighten_text == FALSE & show_text == TRUE) {
 
-      list(background = cell_color, color = text_color, fontWeight = bold_text)
+      list(background = cell_color, color = text_color, fontSize = text_size, fontWeight = bold_text, transition = animation)
 
-    } else if (brighten_text == FALSE & show_text == FALSE) {
+     } else if (brighten_text == TRUE & !is.null(text_color_ref) & show_text == TRUE) {
 
-      list(background = cell_color, color = font_color, fontWeight = bold_text, fontSize = 0)
+      list(background = cell_color, color = text_color, fontSize = text_size, fontWeight = bold_text, transition = animation)
+
+     } else if (brighten_text == FALSE & show_text == FALSE) {
+
+      list(background = cell_color, color = "transparent", fontWeight = bold_text, transition = animation)
 
     } else if (brighten_text == TRUE & show_text == FALSE) {
 
-      list(background = cell_color, color = font_color, fontWeight = bold_text, fontSize = 0)
+      list(background = cell_color, color = "transparent", fontWeight = bold_text, transition = animation)
 
-    } else list(background = cell_color, color = font_color, fontWeight = bold_text)
+    } else list(background = cell_color, color = font_color, fontSize = text_size, fontWeight = bold_text, transition = animation)
 
   }
 }
+

@@ -1,4 +1,133 @@
-# reactablefmtr 1.0.0 (development version)
+# reactablefmtr 2.0.0 - development version
+
+### New Features
+
+#### add_legend() & add_icon_legend()
+
+* Place a legend below a reactable table
+* `add_legend()` can be used to display the color palette used within the table
+* `add_icon_legend()` can be used to display the icon set used within `icon_sets()`
+* The legends can be aligned to either the right or left of the table
+* A title and/or footer can be added to the legend with `title` or `footer`
+* The number of bins displayed within `add_legend()` can be adjusted with `bins`
+
+#### background_img()
+
+* Embed an image from the web into the background of a cell
+* Unlike `embed_img()`, an image within `background_img()` will take up the entire contents of a cell
+* `background_img()` can also be used in conjunction with `embed_img()`
+
+#### bubble_grid()
+
+* Build a customizable bubble grid chart
+* The size of the bubbles are in relation to the values within each column - the bigger the value, the bigger the size of the bubble
+* The shapes of the bubble can either be circles or squares specified by `shape`
+
+#### cell_style()
+
+* `cell_style()` can be used to customize the appearance of certain cells within a table. For example, if you wanted to display a particular value or set of values in a column as bold and in red text, you can do so by specifying either the row number or values themselves
+* Custom styling options include: the color, size, style, and weight of the font within the cell, the color, width, and style of the border around the cell, the vertical and horizontal alignment within the cell, and the background color of the cell. Animation is also applied to `cell_style()` by default, but can be turned off by setting to 'none'
+
+#### gauge_chart()
+
+* Build a customizable gauge chart
+* Show the minimum and maximum values of the column on the gauge by setting `show_min_max` to TRUE
+* Many options that are available in `data_bars()` are available in `gauge_chart()`
+
+#### google_font()
+
+* Apply any font from Google Fonts <https://fonts.google.com/> to a reactable table using `google_font()`
+
+#### group_border_sort()
+
+* Add a styled border beneath rows of specified groups on sort
+* Credit to Greg Lin, creator of {reactable} for writing the JS function
+
+#### group_merge_sort()
+
+* Hide rows containing duplicate values on sort
+* Credit to Greg Lin, creator of {reactable} for writing the JS function
+
+#### html()
+
+* Apply HTML attributes to to text within `add_title()`, `add_subtitle()`, and `add_source()` with the `html()` helper function
+
+#### merge_column()
+
+* Merge and arrange two columns together
+* Can be used with both numeric and non-numeric columns
+* Control the appearance of both the established column and the merged text with options such as text size, color, font weight, font style, and text decoration
+
+#### pill_buttons()
+
+* `pill_buttons()` can be used to surround text or numeric values in a colored pill button. It is similar to `color_tiles()` but is more condensed and round and the width of the pill dynamically adjusts based on the size of the text/values
+* As with `color_tiles()`, `color_scales()`, and `data_bars()`, colors can be conditionally assigned from another column in the dataset and many of the other options available in `color_tiles()` are available in `pill_buttons()`
+* Set `box_shadow` to TRUE to apply a box shadow to the buttons
+
+#### sparklines
+
+* Interactive sparklines can now be added to reactable tables via `react_sparkline()` and `react_sparkbar()`
+* In order to use the sparklines, one must download the {dataui} package from GitHub (https://github.com/timelyportfolio/dataui)
+
+#### tooltip
+
+* Add a tooltip to cells (used with `color_scales()`)
+* Used within `cell` of `reactable::colDef`
+
+
+### Enhancements
+
+#### add_title(), add_subtitle(), add_source()
+
+* Added the ability to control the margin around each with `margin()`
+
+#### animate
+
+* The animation of `data_bars()` can now be controlled with `animate`. The `animate` parameter has also been added to `color_scales()`, `color_tiles()`, `icon_sets()`, and `icon_assign()`. The duration and timing function of the animation can be changed within `animate` or the animation can be turned off by setting it to 'none'. For available timing functions, see [CSS Transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+
+#### color_tiles()
+
+* Set `box_shadow` to TRUE to apply a box shadow to the tiles
+
+#### data_bars()
+
+* Optionally force a range of values to display their text labels on the outside-end of the filled bars when the text_position is set to either "inside-end", "inside-base", or "center". This can be useful when the length of the filled data bars is too short to the text labels on the inside of the filled bars
+* Control the size of the text labels with `text_size`
+* Borders around the filled data bars can now be adjusted with the `border_style`, `border_width`, and `border_color` options
+* Set `box_shadow` to TRUE to apply a box shadow to the bars
+
+#### embed_img()
+
+* The horizontal alignment within a cell can now be controlled with the `horizontal_align` option 
+
+#### icon_assign()
+
+* The alignment of the icons within a column can now be changed to either left, right, or center with `align_icons`. Previously, icons could only be aligned to the left
+
+#### icon_sets()
+
+* Custom pre-selected icon sets can be assigned to values via `icon_set`. Options are "ski rating", "medals", and "batteries". Can be used with `add_icon_legend()`
+
+
+### Bug Fixes
+
+* Fixed a bug that would not assign colors to values within `color_scales()`, `color_tiles()`, and `data_bars()` if there was no variance within the column
+* Fixed the sparkline tooltip to allow all values to show clearly on hover
+* Fixed issue with `icon_assign()` that displayed an error for columns containing all zeros 
+
+
+### Other Modifications
+
+* The default color of `fill_color` within `data_bars()` and `icon_assign()` has been changed to #67a9cf
+* The default position of `text_position` within  `data_bars()` has been changed from "outside-end" to "inside-end"
+* Text is now centered vertically within `data_bars()` by default
+* The size of the text within `data_bars()` can now be changed with `text_size`
+* Added two additional themes: sanfran and no_lines
+* Changed the underlying package in `save_reactable()` from {webshot2} to {webshot}. The {webshot} package is available on CRAN, so there is no need for users to manually download {webshot2} from GitHub
+* The entire contents of a table can be vertically centered by setting `centered` to TRUE within any of the {reactablefmtr} themes 
+
+
+# reactablefmtr 1.0.0
 
 ### New Features
 

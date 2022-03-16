@@ -8,14 +8,17 @@ add_subtitle(
   table = NULL,
   subtitle = NULL,
   align = "left",
-  font_color = "#333",
-  font_family = "-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif",
+  font_color = "#000",
   font_size = 24,
   font_style = "normal",
   font_weight = "bold",
   text_decoration = NULL,
+  text_transform = NULL,
+  letter_spacing = NULL,
+  word_spacing = NULL,
+  text_shadow = NULL,
   background_color = "#FFFFFF",
-  margin = 2
+  margin = NULL
 )
 }
 \arguments{
@@ -28,10 +31,7 @@ Options are "left", "right", "center".
 Default is "left".}
 
 \item{font_color}{Color of the subtitle text.
-Default is #333.}
-
-\item{font_family}{Font family of the subtitle.
-Default is -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif.}
+Default is #000.}
 
 \item{font_size}{Numeric value representing the size of the font of the subtitle (in px).
 Default is 24.}
@@ -44,15 +44,31 @@ Default is "normal".}
 Options are "bold" or "normal".
 Default is "bold".}
 
-\item{text_decoration}{Optionally add an underline, overline, or line-through subtitle.
+\item{text_decoration}{Add an underline, overline, or line-through subtitle.
 Options are "underline", "overline", "underline overline", or "line-through".
+Default is NULL.}
+
+\item{text_transform}{Specify how to capitalize the title.
+Options are "uppercase", "lowercase", or "capitalize".
+Default is NULL.}
+
+\item{letter_spacing}{Numeric value that adjusts the horizontal spacing between letters.
+A number above 0 adds more spacing between letters, a number below 0 decreases the spacing.
+Default is NULL.}
+
+\item{word_spacing}{Numeric value that adjusts the horizontal spacing between words.
+A number above 0 adds more spacing between words, a number below 0 decreases the spacing.
+Default is NULL.}
+
+\item{text_shadow}{Apply a shadow around the title.
+See <https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow> for options.
 Default is NULL.}
 
 \item{background_color}{Color of the subtitle background.
 Default is #FFFFFF.}
 
-\item{margin}{Numeric value representing the four-sided margin around the subtitle (in px).
-Default is 2.}
+\item{margin}{Use margin() to set the margin around the text (top, right, bottom, left).
+Default is NULL.}
 }
 \value{
 a function that adds a subtitle above a reactable table.
@@ -61,7 +77,7 @@ a function that adds a subtitle above a reactable table.
 Use `add_subtitle()` to place a subtitle above a {reactable} or {reactablefmtr} table.
      The same options that are present in `add_title()` and `add_source()` are also available in `add_subtitle()`.
      The subtitle can be aligned to the left, right, or center with the align option.
-     The text properties of the subtitle, such as the font size, font family, and font style can be customized.
+     The text properties of the subtitle, such as the font size and font style can be customized.
      The background color of the subtitle can also be adjusted as well as the margin around the subtitle.
 }
 \examples{

@@ -5,33 +5,45 @@
 \title{Theme void}
 \usage{
 void(
-  font_family = "Verdana",
   font_size = 14,
   font_color = "#222222",
-  header_font_family = "Verdana",
   header_font_size = 15,
   header_font_color = "transparent",
+  border_color = "transparent",
+  border_width = 0,
+  header_border_color = "transparent",
+  header_border_width = 0,
+  centered = FALSE,
   cell_padding = 6
 )
 }
 \arguments{
-\item{font_family}{Font family for the text within the table.
-Default is Verdana.}
-
 \item{font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 14.}
 
 \item{font_color}{Color of the font for the text within the table.
 Default is #222222.}
 
-\item{header_font_family}{Font family for the header text.
-Default is Verdana.}
-
 \item{header_font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 15.}
 
 \item{header_font_color}{Color of the font for the header text.
 Default is transparent}
+
+\item{border_color}{Color of the borders between cells.
+Default is transparent.}
+
+\item{border_width}{Numeric value representing the border width between cells (in px).
+Default is 0.}
+
+\item{header_border_color}{Color of the bottom border of the header.
+Default is transparent.}
+
+\item{header_border_width}{Numeric value representing the bottom border width of the header (in px).
+Default is 0.}
+
+\item{centered}{Logical: vertically center the contents of the table.
+Default is FALSE.}
 
 \item{cell_padding}{Numeric value representing the padding size between cells (in px).
 Default is 6.}
@@ -49,7 +61,7 @@ data <- iris[10:29, ]
 reactable(data,
           theme = void())
 
-## Cerulean theme with additional options applied
+## Additional options applied
 reactable(data,
           theme = void(font_size = 12, font_color = "grey", cell_padding = 3))
 

@@ -6,15 +6,20 @@
 \usage{
 color_scales(
   data,
-  colors = c("#67a9cf", "#f8fcf8", "#ef8a62"),
+  colors = c("#15607A", "#FFFFFF", "#FA8C00"),
   color_ref = NULL,
+  color_by = NULL,
   opacity = 1,
+  bias = 1,
+  text_size = NULL,
   text_color = "black",
+  text_color_ref = NULL,
   show_text = TRUE,
   brighten_text = TRUE,
   brighten_text_color = "white",
   bold_text = FALSE,
-  span = FALSE
+  span = FALSE,
+  animation = "background 1s ease"
 )
 }
 \arguments{
@@ -22,20 +27,36 @@ color_scales(
 
 \item{colors}{A vector of colors to color the cells.
 Colors should be given in order from low values to high values.
-Default colors provided are blue-white-orange: c("#67a9cf", "#f8fcf8", "#ef8a62").
+Default colors provided are blue-white-orange: c("#15607A", "#FFFFFF", "#FA8C00").
 Can use R's built-in colors or other color packages.}
 
-\item{color_ref}{Optionally assign colors to from another column
-by providing the name of the column containing the colors in quotes.
+\item{color_ref}{Assign colors from another column that contains the colors for each row.
 Only one color can be provided per row.
+Default is NULL.}
+
+\item{color_by}{Assign colors to a column based on the values of another column.
+The column in reference must contain numeric data.
+The column in which the colors are being assigned to can be either numerical or character.
 Default is NULL.}
 
 \item{opacity}{A value between 0 and 1 that adjusts the opacity in colors.
 A value of 0 is fully transparent, a value of 1 is fully opaque.
 Default is 1.}
 
+\item{bias}{A positive value that determines the spacing between multiple colors.
+A higher value spaces out the colors at the higher end more than a lower number.
+Default is 1.}
+
+\item{text_size}{Numeric value representing the size of the text labels.
+Default is NULL.}
+
 \item{text_color}{Assigns text color to values.
 Default is black.}
+
+\item{text_color_ref}{Assign text color from another column
+by providing the name of the column containing the text colors in quotes.
+Only one color can be provided per cell.
+Default is NULL.}
 
 \item{show_text}{Logical: show text or hide text.
 Default is TRUE.}
@@ -54,6 +75,13 @@ Default is FALSE.}
 To apply across all columns set to TRUE.
 If applying to a set of columns, can provide either column names or column positions.
 Default is set to FALSE.}
+
+\item{animation}{Control the duration and timing function of the animation
+when sorting/updating values shown on a page.
+See [CSS transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+for available timing functions and examples.
+Animation can be turned off by setting to "none".
+Default is "background 1s ease".}
 }
 \value{
 a function that applies conditional colors

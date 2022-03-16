@@ -25,6 +25,10 @@
 #'     A value of 0 is fully transparent, a value of 1 is fully opaque.
 #'     Default is 1.
 #'
+#' @param align_icons Choose how to align the icons in a column.
+#'     Options are left, right, or center.
+#'     Default is left.
+#'
 #' @param icon_size A value representing the size of the icon in px.
 #'     Default is 16.
 #'
@@ -42,6 +46,13 @@
 #' @param show_values Optionally display values next to icons.
 #'     Options are "left", "right", above", "below", or "none".
 #'     Default is none.
+#'
+#' @param animation Control the duration and timing function of the animation
+#'     when sorting/updating values shown on a page.
+#'     See [CSS transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+#'     for available timing functions and examples.
+#'     Animation can be turned off by setting to "none".
+#'     Default is "1s ease".
 #'
 #' @import reactable
 #'
@@ -82,20 +93,27 @@
 #' Sepal.Length = colDef(cell = icon_assign(data,
 #' show_values = "right"))))
 #'
+#' ## Change the alignment of the icons within a column.
+#' reactable(data,
+#' columns = list(
+#' Sepal.Length = colDef(cell = icon_assign(data,
+#' align_icons = "center"))))
+#'
 #' @export
-
 
 icon_assign <- function(data,
                         icon = "circle",
-                        fill_color = "#1e90ff",
+                        fill_color = "#67a9cf",
                         empty_color = "lightgrey",
                         fill_opacity = 1,
                         empty_opacity = 1,
+                        align_icons = "left",
                         icon_size = 16,
                         buckets = NULL,
                         number_fmt = NULL,
                         seq_by = 1,
-                        show_values = "none") {
+                        show_values = "none",
+                        animation = "1s ease") {
 
 
   '%notin%' <- Negate('%in%')
@@ -103,6 +121,11 @@ icon_assign <- function(data,
   if (show_values %notin% c("left", "right", "above", "below", "none") == TRUE) {
 
     stop("show_values must be either 'left', 'right', 'above', 'below', or 'none'")
+  }
+
+  if (align_icons %notin% c("left", "right", "center") == TRUE) {
+
+    stop("align_icons must be either 'left', 'right', or 'center'")
   }
 
   if (!is.numeric(fill_opacity)) {
@@ -125,21 +148,22 @@ icon_assign <- function(data,
     stop("`empty_opacity` must be a value between 0 and 1")
   }
 
-
   fill_color <- grDevices::adjustcolor(fill_color, alpha.f = fill_opacity)
   empty_color <- grDevices::adjustcolor(empty_color, alpha.f = empty_opacity)
 
   icons <- function(empty = FALSE) {
 
     htmltools::tagAppendAttributes(shiny::icon(icon),
-                                   style = paste0("font-size:", icon_size, "px", "; color:", if (empty) empty_color else fill_color),
+                                   style = paste0("font-size:", icon_size, "px", "; color:", if (empty) empty_color else fill_color, sprintf("; transition: %s", animation)),
                                    "aria-hidden" = "true"
     )
   }
 
   cell <- function(value, index, name) {
 
-    if (!is.numeric(value) | is.na(value)) return(value)
+    if (!is.numeric(value)) return(value)
+
+    if (is.null(value) || is.na(value) || value == "NA" || value == "na" || stringr::str_detect(value, " ")) return("")
 
     if (!is.null(buckets) & !is.numeric(buckets)) {
 
@@ -167,10 +191,20 @@ icon_assign <- function(data,
 
       value_rounded <- floor(value + 0.5)
 
-      icon_seq <- lapply(seq(1, max_value, by = seq_by), function(i) {
+      if (max_value != 0) {
 
-        if (i <= value_rounded) icons() else icons(empty = TRUE)
-      })
+        icon_seq <- lapply(seq(1, max_value, by = seq_by), function(i) {
+
+          if (i <= value_rounded) icons() else icons(empty = TRUE)
+        })
+
+      } else {
+
+        icon_seq <- lapply(seq(0, max_value, by = seq_by), function(i) {
+
+          if (i < value_rounded) icons() else icons(empty = TRUE)
+        })
+      }
 
       label <- sprintf("%s out of %s", value, max_value)
 
@@ -178,13 +212,13 @@ icon_assign <- function(data,
 
     if (show_values == "right" & is.null(number_fmt)) {
 
-      htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = "left", paste0("  ", value))
+      htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons, paste0("  ", value))
 
     } else if (show_values == "right" & !is.null(number_fmt)) {
 
       label <- number_fmt(value)
 
-      htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = "left", paste0("  ", label))
+      htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons, paste0("  ", label))
 
     } else if (show_values == "left" & is.null(number_fmt)) {
 
@@ -192,7 +226,7 @@ icon_assign <- function(data,
 
       label <- stringr::str_pad(value, max_digits)
 
-      htmltools::div(paste0(label, "  "), title = label, "aria-label" = label, role = "img", icon_seq, align = "left")
+      htmltools::div(paste0(label, "  "), title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons)
 
     } else if (show_values == "above" & is.null(number_fmt)) {
 
@@ -201,8 +235,8 @@ icon_assign <- function(data,
       label <- stringr::str_pad(value, max_digits)
 
       htmltools::tagList(
-      htmltools::div(label),
-      htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq)
+        htmltools::div(label, align = align_icons),
+        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons)
       )
 
     } else if (show_values == "above" & !is.null(number_fmt)) {
@@ -214,8 +248,8 @@ icon_assign <- function(data,
       label <- stringr::str_pad(value, max_digits)
 
       htmltools::tagList(
-        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq),
-        htmltools::div(label)
+        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons),
+        htmltools::div(label, align = align_icons)
       )
 
     } else if (show_values == "below" & is.null(number_fmt)) {
@@ -225,8 +259,8 @@ icon_assign <- function(data,
       label <- stringr::str_pad(value, max_digits)
 
       htmltools::tagList(
-        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq),
-        htmltools::div(label)
+        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons),
+        htmltools::div(label, align = align_icons)
       )
 
     } else if (show_values == "below" & !is.null(number_fmt)) {
@@ -238,8 +272,8 @@ icon_assign <- function(data,
       label <- stringr::str_pad(value, max_digits)
 
       htmltools::tagList(
-        htmltools::div(label),
-        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq)
+        htmltools::div(label, align = align_icons),
+        htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons)
       )
 
     } else if (show_values == "left" & !is.null(number_fmt)) {
@@ -250,9 +284,9 @@ icon_assign <- function(data,
 
       label <- stringr::str_pad(label, max_digits)
 
-      htmltools::div(paste0(label, "  "), title = label, "aria-label" = label, role = "img", icon_seq, align = "left")
+      htmltools::div(paste0(label, "  "), title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons)
 
-    } else htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = "left")
+    } else htmltools::div(title = label, "aria-label" = label, role = "img", icon_seq, align = align_icons)
 
   }
 }

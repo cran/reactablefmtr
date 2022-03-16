@@ -5,27 +5,20 @@
 \title{Theme espn}
 \usage{
 espn(
-  font_family = "Arial",
   font_size = 12,
   font_color = "#6C6D6F",
-  header_font_family = "Arial",
   header_font_size = 11,
   header_font_color = "#48494a",
-  cell_padding = 7
+  cell_padding = 7,
+  centered = FALSE
 )
 }
 \arguments{
-\item{font_family}{Font family for the text within the table.
-Default is Arial.}
-
 \item{font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 12.}
 
 \item{font_color}{Color of the font for the text within the table and the group headers.
 Default is #6C6D6F.}
-
-\item{header_font_family}{Font family for the header text.
-Default is Arial.}
 
 \item{header_font_size}{Numeric value representing the size of the font within the table (in px).
 Default is 11.}
@@ -35,6 +28,9 @@ Default is #48494a.}
 
 \item{cell_padding}{Numeric value representing the padding size between cells (in px).
 Default is 7.}
+
+\item{centered}{Logical: vertically center the contents of the table.
+Default is FALSE.}
 }
 \value{
 an object of class theme that is applied to a reactable table.
@@ -49,7 +45,7 @@ data <- iris[10:29, ]
 reactable(data,
           theme = espn())
 
-## Cerulean theme with additional options applied
+## Additional options applied
 reactable(data,
           theme = espn(font_size = 12, font_color = "grey", cell_padding = 3))
 
